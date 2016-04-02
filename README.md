@@ -21,6 +21,7 @@ import Implicits._
 println((doc \ "subdoc2" \ "subdoc2.1" \ "strField").as[String])
 println((doc \ "subdoc1" \ "intField").as[Int])
 println((doc \ "subdoc2" \ "arr" \ 1).as[Int])
+println((doc \ "abc" \ "def" \ 1).as[Double])
 println(doc \ "subdoc2" \ "arr")
 
 // Compare this code without ExtendedBSONDocument and the slash syntax:
@@ -35,6 +36,7 @@ doc.getAs[BSONDocument]("subdoc2")
 Some(string)
 Some(123)
 Some(2)
+None
 ExtendedBSONDocument([1, 2, 3, 4, 5])
 ```
 
