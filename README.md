@@ -22,6 +22,13 @@ println((doc \ "subdoc2" \ "subdoc2.1" \ "strField").as[String])
 println((doc \ "subdoc1" \ "intField").as[Int])
 println((doc \ "subdoc2" \ "arr" \ 1).as[Int])
 println(doc \ "subdoc2" \ "arr")
+
+// Compaert this code without ExtendedBSONDocument and the slash syntax:
+doc.getAs[BSONDocument]("subdoc2")
+	.fold(Option.empty[BSONDocument])(_.getAs[BSONDocument]("subdoc2.1"))
+	.fold(Option.empty[String])(_.getAs[String]("strField"))
+// ...with ExtendedBSONDocument:
+(doc \ "subdoc2" \ "subdoc2.1" \ "strField").as[String]
 ```
 ### Output
 ```
