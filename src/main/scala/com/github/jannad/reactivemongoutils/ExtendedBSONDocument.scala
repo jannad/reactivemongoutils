@@ -15,7 +15,7 @@ object Implicits {
 				case d: BSONDocument => {
 					val s = d.elements
 						.map(elem => s"'${elem._1}': ${f(elem._2)}")
-						.mkString(", ")
+						.mkString(",\n")
 					s"{$s}"
 				}
 				case a: BSONArray => {
@@ -32,7 +32,11 @@ object Implicits {
 				case BSONNull => "Null"
 				case o => o.toString
 			}
-			s"BSONDocument(${f(v)})"
+
+			v match {
+				case d: BSONDocument => s"BSONDocument(${f(d)})"
+				case v => s"${f(v)}"
+			}
 		}
 	}
 
