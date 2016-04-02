@@ -32,7 +32,7 @@ ExtendedBSONDocument([1, 2, 3, 4, 5])
 ```
 
 ##2) Show[BSONValue] and Show[BSONDocument] typeclasses for [Cats](http://typelevel.org/cats/typeclasses.html)
-These give you nice stringification of BSONDocument-s, rather than the standard "BSONDocument(<non-empty>)" produced by BSONDocument.toString
+These give you nice stringification of BSONDocument-s, rather than the standard "BSONDocument(non-empty)" produced by BSONDocument.toString
 
 ### Example Code
 ```Scala
