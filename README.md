@@ -21,14 +21,14 @@ import Implicits._
 println((doc \ "subdoc2" \ "subdoc2.1" \ "strField").as[String])
 println((doc \ "subdoc1" \ "intField").as[Int])
 println((doc \ "subdoc2" \ "arr" \ 1).as[Int])
-println(doc \ "subdoc2" \ "arr" \ 1)
+println(doc \ "subdoc2" \ "arr")
 ```
 ### Output
 ```
 Some(string)
 Some(123)
 Some(2)
-ExtendedBSONDocument(BSONDocument(2))
+ExtendedBSONDocument([1, 2, 3, 4, 5])
 ```
 
 ##2) Show[BSONValue] and Show[BSONDocument] typeclasses for [Cats](http://typelevel.org/cats/typeclasses.html)
