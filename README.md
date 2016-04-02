@@ -25,14 +25,14 @@ println(doc \ "subdoc2" \ "arr" \ 1)
 ```
 ### Output
 ```
-Some(xxxx)
+Some(string)
 Some(123)
 Some(2)
 ExtendedBSONDocument(BSONDocument(2))
 ```
 
 ##2) Show[BSONValue] and Show[BSONDocument] typeclasses for [Cats](http://typelevel.org/cats/typeclasses.html)
-This gives you nice stringification of BSONDocument-s, rather than the standard "BSONDocument(<non-empty>)" produced by BSONDocument.toString
+These give you nice stringification of BSONDocument-s, rather than the standard "BSONDocument(<non-empty>)" produced by BSONDocument.toString
 
 ### Example Code
 ```Scala
