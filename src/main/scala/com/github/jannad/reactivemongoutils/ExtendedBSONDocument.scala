@@ -95,7 +95,6 @@ object Demo {
 		println(doc \ "subdoc2" \ "arr" \ 1)
 
 		import cats.syntax.show._
-		import com.github.jannad.reactivemongoutils.Implicits.bsonDocShow
 		println(doc.show)
 	}
 }
