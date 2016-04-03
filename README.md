@@ -12,7 +12,7 @@ val doc = BSONDocument(
 	"subdoc1" -> BSONDocument("intField" -> 123),
 	"id" -> BSONObjectID("507f1f77bcf86cd799439011"),
 	"subdoc2" -> BSONDocument(
-		"subdoc2.1" -> BSONDocument("strField" -> "string"),
+		"subdoc2_1" -> BSONDocument("strField" -> "string"),
 		"arr" -> BSONArray(1, 2, 3, 4, 5)
 	)
 )
@@ -29,7 +29,7 @@ doc.getAs[BSONDocument]("subdoc2")
 	.fold(Option.empty[BSONDocument])(_.getAs[BSONDocument]("subdoc2.1"))
 	.fold(Option.empty[String])(_.getAs[String]("strField"))
 // ...with ExtendedBSONDocument:
-(doc \ "subdoc2" \ "subdoc2.1" \ "strField").as[String]
+(doc \ "subdoc2" \ "subdoc2_1" \ "strField").as[String]
 ```
 ### Output
 ```
@@ -40,7 +40,26 @@ None
 ExtendedBSONDocument([1, 2, 3, 4, 5])
 ```
 
-##2) Show[BSONValue] and Show[BSONDocument] typeclasses for [Cats](http://typelevel.org/cats/typeclasses.html)
+##2) Path Interpolation
+Custom String interpolation for defining applicable paths on BSON documents. ```path"$pathString"``` produces a function from BSONValue to ExtendedBSONDocument.
+
+### Example Code
+```Scala
+import BSONPathInterpolation._
+
+val index = 3
+val arrField = "arr"
+println(path"subdoc2.subdoc2_1.strField"(doc).as[String])
+println(path"subdoc2.$arrField.$index"(doc).as[Int])
+```
+
+### Output
+```
+Some(xxxx)
+Some(4)
+```
+
+##3) Show[BSONValue] and Show[BSONDocument] typeclasses for [Cats](http://typelevel.org/cats/typeclasses.html)
 These give you nice stringification of BSONDocument-s, rather than the standard "BSONDocument(non-empty)" produced by BSONDocument.toString
 
 ### Example Code
