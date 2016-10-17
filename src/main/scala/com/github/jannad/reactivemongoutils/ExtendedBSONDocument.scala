@@ -14,30 +14,30 @@ object Implicits {
 	  * Converts BSONValue to human-readable string
 	  */
 	implicit val bsonValShow = new Show[BSONValue] {
-		override def show(v: BSONValue) = {
+		override def show(bsonval: BSONValue) = {
 			def stringify(v: BSONValue): String = v match {
-				case d: BSONDocument => {
-					val s = d.elements
+				case doc: BSONDocument => {
+					val s = doc.elements
 						.map(elem => s"'${elem._1}': ${stringify(elem._2)}")
 						.mkString(",\n")
 					s"{$s}"
 				}
-				case a: BSONArray => {
-					val s = a.values.map(stringify(_)).mkString(", ")
+				case arr: BSONArray => {
+					val s = arr.values.map(stringify(_)).mkString(", ")
 					s"[${s}]"
 				}
-				case o: BSONLong => o.value.toString
-				case o: BSONInteger => o.value.toString
-				case o: BSONDouble => o.value.toString
-				case o: BSONString => s"'${o.value.toString}'"
-				case o: BSONDateTime => new Date(o.value).toString
-				case o: BSONTimestamp => new Date(o.value).toString
-				case o: BSONObjectID => s"ObjectId('${o.stringify}')"
+				case BSONLong(value) => value.toString
+				case BSONInteger(value) => value.toString
+				case BSONDouble(value) => value.toString
+				case BSONString(value) => s"'${value.toString}'"
+				case BSONDateTime(value) => new Date(value).toString
+				case BSONTimestamp(value) => new Date(value).toString
+				case oid: BSONObjectID => s"ObjectId('${oid.stringify}')"
 				case BSONNull => "Null"
 				case o => o.toString
 			}
 
-			v match {
+			bsonval match {
 				case d: BSONDocument => s"BSONDocument(${stringify(d)})"
 				case v => s"${stringify(v)}"
 			}
@@ -100,33 +100,5 @@ case class ExtendedBSONDocument(doc: Option[BSONValue]) {
 		import  com.github.jannad.reactivemongoutils.Implicits.bsonValShow
 		import cats.syntax.show._
 		s"ExtendedBSONDocument(${doc.map(d => d.show).getOrElse("None")})"
-	}
-}
-
-object Demo {
-	import Implicits._
-
-	val doc = BSONDocument(
-		"subdoc1" -> BSONDocument("intField" -> 123),
-		"id" -> BSONObjectID("507f1f77bcf86cd799439011"),
-		"subdoc2" -> BSONDocument("subdoc2_1" -> BSONDocument("strField" -> "xxxx"), "arr" -> BSONArray(1, 2, 3, 4, 5)
-		)
-	)
-
-	def main(args: Array[String]) {
-		println((doc \ "subdoc2" \ "subdoc2_1" \ "strField").as[String])
-		println((doc \ "subdoc1" \ "intField").as[Int])
-		println((doc \ "subdoc2" \ "arr" \ 1).as[Int])
-		println((doc \ "abc" \ "def" \ 1).as[Double])
-
-		import cats.syntax.show._
-		println(doc.show)
-
-		import BSONPathInterpolation._
-		val index = 3
-		val arrField = "arr"
-		println(path"subdoc2.subdoc2_1.strField"(doc).as[String])
-		println(path"subdoc2.$arrField.$index"(doc).as[Int])
-
 	}
 }
