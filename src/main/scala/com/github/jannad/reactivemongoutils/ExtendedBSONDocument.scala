@@ -52,6 +52,8 @@ object Implicits {
 }
 
 /**
+  * This class adds new behavior to BSONDocument class that enables navigation using the "\" operator.
+  *
   * @author jannad
   */
 case class ExtendedBSONDocument(doc: Option[BSONValue]) {
