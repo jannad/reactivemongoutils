@@ -4,7 +4,7 @@ Little helpers for working with reactive mongo and BSON documents
 #Usage
 
 ##1) "\" syntax for traversing BSONValue structures
-Use implicit conversion to ExtendedBSONDocument that enables a syntax similar to Play JSON JsValue with an extension for accessing BSONArray elements. You can either use string paths elements to traverse fields, or integers to access elements of BSONArray-s.
+Use implicit conversion to ExtendedBSONDocument that enables a syntax similar to Play JSON JsValue with an extension for accessing BSONArray elements. You can either use string path elements to traverse fields, or integers to access elements of BSONArray-s.
 
 ### Example Code
 ```Scala
