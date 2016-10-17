@@ -1,5 +1,5 @@
 # reactivemongoutils
-Little helpers for working with reactive mongo and BSON documents
+Little helpers for working with [ReactiveMongo](http://reactivemongo.org/) and BSON documents, written in Scala.
 
 #Usage
 
