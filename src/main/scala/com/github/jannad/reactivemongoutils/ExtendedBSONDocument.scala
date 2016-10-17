@@ -15,15 +15,15 @@ object Implicits {
 	  */
 	implicit val bsonValShow = new Show[BSONValue] {
 		override def show(v: BSONValue) = {
-			def f(v: BSONValue): String = v match {
+			def stringify(v: BSONValue): String = v match {
 				case d: BSONDocument => {
 					val s = d.elements
-						.map(elem => s"'${elem._1}': ${f(elem._2)}")
+						.map(elem => s"'${elem._1}': ${stringify(elem._2)}")
 						.mkString(",\n")
 					s"{$s}"
 				}
 				case a: BSONArray => {
-					val s = a.values.map(f(_)).mkString(", ")
+					val s = a.values.map(stringify(_)).mkString(", ")
 					s"[${s}]"
 				}
 				case o: BSONLong => o.value.toString
@@ -38,8 +38,8 @@ object Implicits {
 			}
 
 			v match {
-				case d: BSONDocument => s"BSONDocument(${f(d)})"
-				case v => s"${f(v)}"
+				case d: BSONDocument => s"BSONDocument(${stringify(d)})"
+				case v => s"${stringify(v)}"
 			}
 		}
 	}
@@ -57,16 +57,35 @@ object Implicits {
   * @author jannad
   */
 case class ExtendedBSONDocument(doc: Option[BSONValue]) {
+
+	/**
+	  * Selects a sub-document from the wrapped document
+	  *
+	  * @param path
+	  * @return Sub-document at the specified path
+      */
 	def \(path: String) = doc match {
 		case Some(d: BSONDocument) => ExtendedBSONDocument(d.get(path))
 		case _ => ExtendedBSONDocument(None)
 	}
 
+	/**
+	  * Selects an item from the wrapped BSONArray
+	  *
+	  * @param index
+	  * @return Element at the specified index wrapped in ExtendedBSONDocument, if the referenced document is an instance of BSONArray.
+	  *         ExtendedBSONDocument(None) otherwise.
+      */
 	def \(index: Int) = doc match {
 		case Some(arr: BSONArray) => ExtendedBSONDocument(arr.get(index))
 		case _ => ExtendedBSONDocument(None)
 	}
 
+	/**
+	  * Tries to produce an instance of `T` from the wrapped BSON value
+	  *
+      * @return Some(t of T) if the wrapped value is compatible with `T`. None otherwise.
+      */
 	def as[T](implicit reader: BSONReader[_ <: BSONValue, T]): Option[T] = doc match {
 		case None => Option.empty[T]
 		case Some(v: BSONValue) => {

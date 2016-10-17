@@ -6,6 +6,7 @@ import reactivemongo.bson.BSONValue
   * @author jannad
   *
   * Custom string interpolation for BSON document paths.
+  * See [[http://docs.scala-lang.org/overviews/core/string-interpolation.html String Interpolation]]
   *
   * Usage: path"fieldA.fieldB.${fieldC}.array1.10" produces a function that can be applied to BSONValue
   */
@@ -17,6 +18,7 @@ object BSONPathInterpolation {
 	implicit class BSONPathHelper(val sc: StringContext) extends AnyVal {
 
 		def path(args: Any*): BSONValue => ExtendedBSONDocument = {
+			// Interleaves string portions of the path (stored in parts) with expression values (i.e. the "${...}" parts) in args
 			def interleave(args: List[Any], parts: List[String]): List[Any] = {
 				(args, parts) match {
 					case (Nil, p::Nil) => p::Nil
@@ -24,6 +26,7 @@ object BSONPathInterpolation {
 				}
 			}
 
+			// Expanded path (expressions replaced with values)
 			val pathStr = interleave(args.toList, sc.parts.toList).map(_.toString)
 
 			val Num = "([0-9])+".r
